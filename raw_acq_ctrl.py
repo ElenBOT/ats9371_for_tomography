@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 def process_buffer(buffer, cha_A, cha_B, n_records, n_samples):
     """The parallel computing to convert raw data to volt and also split into two channels.
 
-    This method is tested to be faster then numpy by around 12% ~ 22%.
+    For our use case, this method is tested to be faster then numpy method by around 250% ~ 400%.
     The raw data in the buffer is stored as [A, B, A, B, A, B, ...] patten,
     for raw data to voltage conversion, see docsting of old function `signal_to_volt`.
     """
