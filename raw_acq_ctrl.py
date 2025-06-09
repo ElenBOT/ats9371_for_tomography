@@ -10,7 +10,6 @@ I modify the following things:
 -- 2. numba_get_alldata_from_buffer_in_volt: use numba, a JIT compiler, to do faster conversion.
 """
 
-import math
 from typing import TYPE_CHECKING, Any, Optional
 import numba
 import numpy as np
