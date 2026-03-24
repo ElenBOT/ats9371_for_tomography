@@ -15,9 +15,12 @@ pip install qcodes
 # Connect and setting
 Import and connect.
 ```python
-from ATS9371_for_tomography.ats9371 import AlazarTechATS9371
-from ATS9371_for_tomography.raw_acq_ctrl import RawAcquisitionController
-# connect to ATS9371
+## import and find card
+from ats9371_for_tomography.ats9371 import AlazarTechATS9371
+from ats9371_for_tomography.raw_acq_ctrl import RawAcquisitionController
+AlazarTechATS9371.find_boards()
+
+## connect to ATS9371
 ats_inst = AlazarTechATS9371(name='ATS9371')
 acq_ctrl = RawAcquisitionController(
     name='ATS9371_acq', alazar_name='ATS9371'
@@ -26,21 +29,34 @@ acq_ctrl = RawAcquisitionController(
 
 Sync settings, see the end of the file for all settings that can be used.
 ```python
-# config setting
-SAMPLING_RATE = 1_000_000_000 # 1GHz
+## config setting
+ADC_SAMPLING_RATE = 1_000_000_000 # 1GHz
+TRIGGER_DELAY_SAMPLES = 8 * 17 # mutiple of 8
 with ats_inst.syncing():
-    ats_inst.clock_source("INTERNAL_CLOCK")
-    ats_inst.sample_rate(SAMPLING_RATE)
+    #### clock setting
+    ## option1: internal clock with sampling rate setting
+    # ats_inst.clock_source("INTERNAL_CLOCK")
+    # ats_inst.sample_rate(ADC_SAMPLING_RATE)
+    ## option2: external clock, sampling rate is the same as clock
+    ats_inst.sample_rate("EXTERNAL_CLOCK")
+    ats_inst.clock_source("FAST_EXTERNAL_CLOCK")
+    ## option3: 10MHz external clock with sampling rate setting
+    # ats_inst.clock_source("EXTERNAL_CLOCK_10MHz_REF")
+    # ats_inst.external_sample_rate(ADC_SAMPLING_RATE)
+
+    #### trigger setting
     ats_inst.trigger_operation('TRIG_ENGINE_OP_J')
     ats_inst.trigger_engine1("TRIG_ENGINE_J")
     ats_inst.trigger_source1("EXTERNAL")
+    # ats_inst.external_trigger_range()
     ats_inst.trigger_slope1("TRIG_SLOPE_POSITIVE")
-    ats_inst.trigger_level1(160)
-    ats_inst.trigger_delay(1400) # samples
+    ats_inst.trigger_level1(150) # 0~255
+    ats_inst.trigger_delay(0)
     ats_inst.trigger_source2("DISABLE")
-# acquisition setting
-NUMBER_OF_RECORDS = 8192 # trace per acquisition, max 84MB
-NUMBER_OF_SAMPLES = 3200 # samples per trace
+
+## acquisition setting
+NUMBER_OF_RECORDS = 5000 # trace per acquisition
+NUMBER_OF_SAMPLES = 128*25 # samples per trace, multiple of 128
 acq_ctrl.update_acquisitionkwargs(
     samples_per_record = NUMBER_OF_SAMPLES,
     records_per_buffer = NUMBER_OF_RECORDS,
