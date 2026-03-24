@@ -1,3 +1,5 @@
+see video: https://www.youtube.com/watch?v=l_GHQ7Fy5kc&t.
+# ATS9371 Driver
 I use QCoDeS to perform fast acquisition of raw data from the 
 AlazarTech ATS9371 card, optimized for use case of tomography.
 This code is directly copied and moidfied from modules in QCoDeS.
